@@ -1,0 +1,13 @@
+<div [formGroup]="form">
+    <select #dropdown class="form-select w-100 mb-4" [id]="meta.key" [formControlName]="meta.key"
+        (ngModelChange)="changeState($event)">
+        <option *ngFor="let opt of meta.options, let i = index" [value]="opt.key">
+            <span *ngIf="this.meta.key.includes('color') && colorsName.length > 0">
+                {{ this.colorsName[i] }} -
+            </span>
+            <span>
+                {{ opt.value }}
+            </span>
+        </option>
+    </select>
+</div>

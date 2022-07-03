@@ -1,0 +1,9 @@
+.form-container {
+    display: flex;
+    margin: auto;
+}
+
+.form-row {
+    margin: auto;
+    text-align: center;
+}

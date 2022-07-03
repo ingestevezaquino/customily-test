@@ -1,0 +1,4 @@
+<div [formGroup]="form">
+    <input class="form-control mb-4" (ngModelChange)="valueChange($event)" [formControlName]="meta.key" [id]="meta.key"
+        type="text" />
+</div>

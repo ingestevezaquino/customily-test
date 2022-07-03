@@ -1,0 +1,12 @@
+<div>
+    <div [ngSwitch]="control.controlType">
+        <app-label *ngSwitchCase="'label'" [meta]="control"></app-label>
+        <app-text-input *ngSwitchCase="'textinput'" [engraver]="engraver" [meta]="control" [form]="form">
+        </app-text-input>
+        <app-dropdown *ngSwitchCase="'dropdown'" [colorsName]="this.colorsName" [engraver]="engraver" [meta]="control"
+            [form]="form">
+        </app-dropdown>
+        <app-image-input *ngSwitchCase="'imageinput'" [engraver]="engraver" [meta]="control" [form]="form">
+        </app-image-input>
+    </div>
+</div>
