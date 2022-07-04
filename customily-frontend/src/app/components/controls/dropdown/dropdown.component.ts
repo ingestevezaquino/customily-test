@@ -25,6 +25,7 @@ export class DropdownComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dropdown.nativeElement.options.selectedIndex = 0;
+    this.form.controls[this.meta.key].setValue(this.dropdown.nativeElement.options[0].value)
   }
 
   changeState(newValue: string) {

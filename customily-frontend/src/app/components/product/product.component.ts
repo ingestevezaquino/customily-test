@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ColorService } from 'src/app/services/color.service';
@@ -13,9 +13,11 @@ declare let engraver: any; //declare engraver
 })
 export class ProductComponent implements OnInit {
 
+  @ViewChild('spinner') spinner!: ElementRef
+
   colorsName: string[] = []
   engraver: any = engraver
-  form: FormGroup = this.fb.group({ text1: [''] });
+  form: FormGroup = this.fb.group({});
   formData: ControlBase[] = []
   templateGUID: string | null = this.route.snapshot.paramMap.get('templateGuid');
 
@@ -27,6 +29,7 @@ export class ProductComponent implements OnInit {
       this.collectDataFromEngraver(this.engraver.currentProduct)
       this.form = this.createFormGroup(this.formData)
     });
+
   }
 
   collectDataFromEngraver(data: any): ControlBase[] {
@@ -36,10 +39,10 @@ export class ProductComponent implements OnInit {
 
     for (let i = 0; i < data.preview.textsPreview.length; i++) {
       this.formData.push({
-        key: '',
+        key: 'n/d',
+        value: 'Text ' + (i + 1),
         order: this.formData.length == 0 ? 0 : this.formData.length,
-        controlType: 'label',
-        text: 'Text ' + (i + 1)
+        controlType: 'label'
       })
 
       this.formData.push({
@@ -55,10 +58,10 @@ export class ProductComponent implements OnInit {
 
       if (fontsMap.length > 0) {
         this.formData.push({
-          key: '',
+          key: 'n/d',
+          value: 'Text ' + (i + 1) + '\'s font',
           order: this.formData.length == 0 ? 0 : this.formData.length,
-          controlType: 'label',
-          text: 'Text ' + (i + 1) + '\'s font'
+          controlType: 'label'
         })
 
         let textFonts: ControlBase = {
@@ -82,10 +85,10 @@ export class ProductComponent implements OnInit {
 
       if (fontColorsMap.length > 1) {
         this.formData.push({
-          key: '',
+          key: 'n/d',
+          value: 'Text ' + (i + 1) + '\'s font color',
           order: this.formData.length == 0 ? 0 : this.formData.length,
-          controlType: 'label',
-          text: 'Text ' + (i + 1) + '\'s font color'
+          controlType: 'label'
         })
 
         let textFontColors: ControlBase = {
@@ -105,16 +108,14 @@ export class ProductComponent implements OnInit {
     // ==================================================================================== 
     // select / upload image
 
-    console.log(this.engraver.currentProduct)
-
     for (let i = 0; i < data.preview.imagePlaceHoldersPreview.length; i++) {
 
       if (data.preview.imagePlaceHoldersPreview[i].dynamicImagesPath === null) {
         this.formData.push({
-          key: '',
+          key: 'n/d',
+          value: 'Image ' + (i + 1),
           order: this.formData.length == 0 ? 0 : this.formData.length,
-          controlType: 'label',
-          text: 'Image ' + (i + 1)
+          controlType: 'label'
         })
 
         this.formData.push({
@@ -125,10 +126,10 @@ export class ProductComponent implements OnInit {
       }
       else if (data.preview.imagePlaceHoldersPreview[i].dynamicImagesPath.size > 0) {
         this.formData.push({
-          key: '',
+          key: 'n/d',
+          value: 'Dynamic Image ' + (i + 1),
           order: this.formData.length == 0 ? 0 : this.formData.length,
-          controlType: 'label',
-          text: 'Dynamic Image ' + (i + 1)
+          controlType: 'label'
         })
 
         let dynamicImages: ControlBase = {
@@ -145,7 +146,6 @@ export class ProductComponent implements OnInit {
 
         this.formData.push(dynamicImages)
       }
-
     }
 
     // ==================================================================================== 
@@ -175,5 +175,23 @@ export class ProductComponent implements OnInit {
       error: (error: any) => { console.log(error) },
       complete: () => { }
     })
+  }
+
+  saveData() {
+    this.spinner.nativeElement.classList.remove('d-none')
+
+    this.formData.forEach((control: ControlBase) => {
+      if (control.controlType === 'textinput') {
+        control.value = this.form.controls[control.key].value
+      } else if (control.controlType === 'dropdown') {
+        control.value = `${this.form.controls[control.key].value}`
+      }
+    })
+
+    setTimeout(() => {
+      this.spinner.nativeElement.classList.add('d-none')
+    }, 1500)
+
+    console.log(this.formData)
   }
 }
